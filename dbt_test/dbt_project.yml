@@ -1,15 +1,15 @@
-
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
 name: 'dbt_test'
 version: '1.0.0'
+config-version: 2
 
 # This setting configures which "profile" dbt uses for this project.
 profile: 'dbt_test'
 
 # These configurations specify where dbt should look for different types of files.
-# The `model-paths` config, for example, states that models in this project can be
+# The model-paths config, for example, states that models in this project can be
 # found in the "models/" directory. You probably won't need to change these!
 model-paths: ["models"]
 analysis-paths: ["analyses"]
@@ -18,7 +18,8 @@ seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
-clean-targets:         # directories to be removed by `dbt clean`
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by dbt clean
   - "target"
   - "dbt_packages"
 
@@ -26,11 +27,41 @@ clean-targets:         # directories to be removed by `dbt clean`
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 
-# In this example config, we tell dbt to build all models in the example/
-# directory as views. These settings can be overridden in the individual model
-# files using the `{{ config(...) }}` macro.
+# In this example config, we tell dbt to build all models in the example/ directory
+# as tables. These settings can be overridden in the individual model files
+# using the {{ config(...) }} macro.
+
+seeds:
+    +column_types:
+      id: int
+      user_id: int
+      order_date: date
+      status: varchar
+      _etl_loaded_at: timestamptz
+
 models:
   dbt_test:
     # Config indicated by + and applies to all files under models/example/
     example:
       +materialized: view
+      
+    staging:
+      +materialized: table
+
+    
+
+# on-run-start: "drop table if exists public.raw_customers"
+# on-run-end:  "update public.my_first_dbt_model SET id=1 where id = 2"
+
+# tests:
+#   +severity: warn
+#   +store_failures: true
+
+# # vars:
+#     first_name : 'Michael'
+
+# vars:
+#     my_variable: "{{ env_var('MY_VARIABLE') }}"
+
+# config:
+#   profile_dir: 'C:/Users/ambik/ambik_backup/.dbt'
