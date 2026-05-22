@@ -1,0 +1,31 @@
+version: 2
+
+ 
+
+sources:
+
+  - name: jaffle_shop
+
+    loader: fivetran
+
+    database: my_database
+
+    schema: dbt_vvignesh
+
+ 
+
+    tables:
+
+      - name: raw_orders
+
+        config:
+
+          freshness: 
+
+            warn_after: {count: 6, period: hour}
+
+            error_after: {count: 12, period: hour}
+
+      
+
+      - name: raw_customers
