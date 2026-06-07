@@ -27,9 +27,9 @@ Try changing "table" to "view" below
 
 with source_data as (
 
-select 1 as id,20000 as new
+select 1 as id
 union all
-select 2000 as id , null as new
+select 2 as id
 
 )
 
